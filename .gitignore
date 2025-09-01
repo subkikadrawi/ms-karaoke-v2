@@ -1,0 +1,4 @@
+node_modules
+secure_media
+build
+.env

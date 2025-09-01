@@ -1,0 +1,17 @@
+{
+  "extends": "./node_modules/gts/",
+  "plugins": ["node"],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "node/no-unpublished-import": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "node/no-process-env": "error",
+    "@typescript-eslint/no-empty-interface": "off",
+    "curly": ["error", "all"]
+  },
+  "parserOptions": {
+    "project": ["./tsconfig.json"]
+  }
+}
