@@ -20,10 +20,11 @@ enum ETypeSetNewPassword {
 }
 
 enum EStatusPlaylist {
-  Queued = 'queued',
+  Queue = 'queue',
   Playing = 'playing',
   Played = 'played',
   Stopped = 'stopped',
+  Deleted = 'deleted',
 }
 
 export {EDayOfWeek, ETypeSendEmail, ETypeSetNewPassword, EStatusPlaylist};
