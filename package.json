@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "npx nodemon --delay 1000ms ./src/index.ts\n",
+    "build": "npx tsc",
     "migrate:latest": "npx knex migrate:latest",
     "migrate:rollback": "npx knex migrate:rollback",
     "test": "echo \"Error: no test specified\" && exit 1",

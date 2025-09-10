@@ -4,7 +4,7 @@ interface IKaraokePlaylistTbl {
   id?: number;
   rental_id: number;
   sequence: number;
-  music_id: number;
+  music_id: string;
   source_karaoke: string;
   music_title: string;
   music_path_url: string;

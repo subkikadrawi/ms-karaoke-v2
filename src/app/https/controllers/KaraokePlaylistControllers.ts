@@ -138,6 +138,9 @@ const addPlaylist = async (
     });
   }
 
+  //reArrange sequence
+  await reArrangeSequenceHelper(rental.id ?? 0);
+
   const response: IBaseResourceModel = {
     isSuccess: true,
     message: 'success add playlist',
@@ -227,10 +230,11 @@ const setPlaying = async (req: IMainRequest, res: Response) => {
       status: EHttpResponseStatus.NotFound,
     });
   }
+  logger.info('Getting rental id from token:', rental.id);
 
   // get playlist tbl
   const karaokePlaylist = await KaraokePlaylistTblRepository.findOne({
-    q: {rental_id: rental.id, status: EStatusPlaylist.Playing},
+    q: {rental_id: rental.id, status: EStatusPlaylist.Queue},
   });
 
   if (!karaokePlaylist) {
@@ -241,6 +245,7 @@ const setPlaying = async (req: IMainRequest, res: Response) => {
       status: EHttpResponseStatus.NotFound,
     });
   }
+  logger.info('Getting playlist id from token:', karaokePlaylist.id);
 
   //set playing playlist
   await setPlayingHelper(rental.id ?? 0);
@@ -251,7 +256,7 @@ const setPlaying = async (req: IMainRequest, res: Response) => {
   const response: IBaseResourceModel = {
     isSuccess: true,
     message: 'success update playlist to playing',
-    status: 200,
+    status: EHttpResponseStatus.OK,
   };
 
   logger.info(ELogStage.end);
@@ -328,12 +333,28 @@ const setNext = async (req: IMainRequest, res: Response) => {
   });
 
   if (!karaokePlaylist) {
-    logger.error('Playlist not found');
-    return BaseResource.exec(res, {
-      isSuccess: false,
-      message: `${EHttpResponseStatusDesc.NotFound} - Playlist not found`,
-      status: EHttpResponseStatus.NotFound,
+    //set playing playlist
+    await setPlayingHelper(rental.id ?? 0);
+
+    const karaokePlaylist = await KaraokePlaylistTblRepository.findOne({
+      q: {rental_id: rental.id, status: EStatusPlaylist.Playing},
     });
+
+    if (!karaokePlaylist) {
+      logger.error('Playlist not found');
+      return BaseResource.exec(res, {
+        isSuccess: false,
+        message: `${EHttpResponseStatusDesc.NotFound} - Playlist not found`,
+        status: EHttpResponseStatus.NotFound,
+      });
+    }
+    const response: IBaseResourceModel = {
+      isSuccess: true,
+      message: 'success update playlist to next',
+      status: EHttpResponseStatus.OK,
+    };
+    logger.info(ELogStage.end);
+    return BaseResource.exec(res, response);
   }
 
   //set stopped playlist

@@ -81,6 +81,9 @@ class KaraokePlaylistTblRepository implements IRepository {
       if (condition.q.id) {
         query.where('id', condition.q.id);
       }
+      if (condition.q.status) {
+        query.where('status', condition.q.status);
+      }
     }
     return KnexRepositoryBase.Update(query, data);
   }

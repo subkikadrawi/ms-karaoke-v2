@@ -1,11 +1,7 @@
 import {Response, NextFunction} from 'express';
 import {BaseResource} from '../resources/BaseResource';
 import {logger} from '../../configs/LoggerConfig';
-import {
-  decodeToken,
-  generateAccessToken,
-  verifyRefreshToken,
-} from '../../configs/JwtConfig';
+import {decodeToken, generateAccessToken} from '../../configs/JwtConfig';
 import {IMainRequest} from '../requests/MainRequest';
 
 export function refreshTokenMiddleware(
@@ -26,24 +22,12 @@ export function refreshTokenMiddleware(
 
   const token = authHeader.split(' ')[1];
 
-  const verify = verifyRefreshToken(token);
-
-  if (!verify.valid) {
-    logger.error(`Unauthorized: ${verify.message}`);
-    return BaseResource.exec(res, {
-      message: `Unauthorized: ${verify.message}`,
-      isSuccess: false,
-      requestId: req.requestId,
-      status: 401,
-    });
-  }
-
   const decode = decodeToken(token);
 
   if (!decode.valid) {
-    logger.error(`Unauthorized: ${verify.message}`);
+    logger.error(`Unauthorized: ${decode.message}`);
     return BaseResource.exec(res, {
-      message: `Unauthorized: ${verify.message}`,
+      message: `Unauthorized: ${decode.message}`,
       isSuccess: false,
       requestId: req.requestId,
       status: 401,
@@ -52,7 +36,7 @@ export function refreshTokenMiddleware(
 
   const newAccessToken = generateAccessToken({
     sub: decode.payload.sub,
-    username: decode.payload.username,
+    login: decode.payload.login,
   });
 
   req.token = newAccessToken;

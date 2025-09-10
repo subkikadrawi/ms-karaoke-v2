@@ -1,6 +1,6 @@
 interface IAddPlaylistRequest {
   rental_id: number;
-  music_id: number;
+  music_id: string;
   source_karaoke: string;
   music_title: string;
   music_path_url: string;

@@ -1,6 +1,5 @@
 /* eslint-disable no-misleading-character-class */
 /* eslint-disable no-useless-escape */
-import {superscriptMap} from './MappiningStrictChar';
 
 const validateEmail = (email: string) => {
   const re =
@@ -32,21 +31,6 @@ function toIDRFormat(str: string): string {
   const value = Number(raw.replace(/,/g, ''));
   const result = isNaN(value) ? '0' : value.toLocaleString('id-ID');
   return result;
-}
-
-function cleanText(input: string): string {
-  const normalized = input.normalize('NFD').replace(/\u00A0/g, ' ');
-
-  const replaced = normalized.replace(
-    /[\u2070-\u209F\u02B0-\u02FF\u1D2C-\u1D7F]/g,
-    c => superscriptMap[c] || '',
-  );
-
-  return replaced
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[.,{}[\]()<>:;"'!?@#$%^&*+=\\|/~`_]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
 }
 
 function getBirthdayFromKtp(nik: string): string {
@@ -117,7 +101,6 @@ export {
   funcNameWoTitleDegree,
   getBirthdayFromKtp,
   hasSpecialCharacter,
-  cleanText,
   toIDRFormat,
   validateSetPassword,
 };

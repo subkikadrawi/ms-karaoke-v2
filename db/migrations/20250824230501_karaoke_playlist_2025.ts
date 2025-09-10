@@ -6,7 +6,7 @@ export async function up(knex: Knex): Promise<void> {
       id int(11) PRIMARY KEY,
       transaction_id INT,
       sequence INT,
-      music_id INT,
+      music_id VARCHAR(255),
       source_karaoke VARCHAR(100),
       music_title VARCHAR(255),
       music_path_url VARCHAR(255),

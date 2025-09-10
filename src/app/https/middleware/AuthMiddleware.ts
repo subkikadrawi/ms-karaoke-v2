@@ -52,6 +52,7 @@ const getToken = (req: IMainRequest): string | null => {
 
 const getUserId = (req: IMainRequest): number => {
   // get user id from token
+  logger.info('Getting user id from token');
   const token = getToken(req);
   const valueToken = decodeToken(token ?? '');
   const user_id = Number(valueToken.payload.sub);

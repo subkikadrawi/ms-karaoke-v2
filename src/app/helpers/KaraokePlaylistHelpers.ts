@@ -31,6 +31,7 @@ const reArrangeSequenceHelper = async (
 
 const setPlayingHelper = async (rentalId: number): Promise<boolean> => {
   // get playlist tbl
+  logger.info('Setting playlist to playing for rentalId:', rentalId);
   const karaokePlaylist = await KaraokePlaylistTblRepository.findOne({
     q: {rental_id: rentalId, status: EStatusPlaylist.Queue},
     orderBy: {column: 'sequence', direction: 'asc'},
@@ -42,6 +43,7 @@ const setPlayingHelper = async (rentalId: number): Promise<boolean> => {
   }
 
   // update playlist
+  logger.info('Updating playlist to playing for rentalId:', rentalId);
   const updatedPlaylist = {
     status: EStatusPlaylist.Playing,
   } as IKaraokePlaylistTblQueryOutput;
@@ -50,6 +52,7 @@ const setPlayingHelper = async (rentalId: number): Promise<boolean> => {
     await KaraokePlaylistTblRepository.update(updatedPlaylist, {
       q: {id: karaokePlaylist.id},
     });
+    logger.info('Playlist updated to playing for rentalId:', rentalId);
   } catch (error) {
     logger.error('Error updating playlist:', error);
     return false;
