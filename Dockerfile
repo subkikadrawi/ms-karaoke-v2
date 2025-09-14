@@ -3,6 +3,11 @@ FROM node:23-slim AS builder
 
 WORKDIR /app
 
+# Install curl and jq for entrypoint
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl jq \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY package*.json ./
 RUN npm install --ignore-scripts
 
@@ -15,6 +20,11 @@ RUN npm run build
 FROM node:23-slim
 
 WORKDIR /app
+
+# Install curl and jq for entrypoint
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl jq \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy only what’s needed
 COPY --from=builder /app/build ./build
