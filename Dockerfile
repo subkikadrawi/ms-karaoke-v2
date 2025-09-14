@@ -1,30 +1,27 @@
 # ---------- Stage 1: Build ----------
-  FROM node:20.19.2-slim AS builder
+FROM node:23-slim AS builder
 
-  # Set working directory
-  WORKDIR /app
+WORKDIR /app
 
-  # Install dependencies
-  COPY package*.json ./
-  RUN npm install
+COPY package*.json ./
+RUN npm install --ignore-scripts
 
-  # Copy the rest of the app
-  COPY . .
+COPY . .
 
-  # Build TypeScript or other
-  RUN npm run build
+# Compile TypeScript -> build/
+RUN npm run build
 
-  # ---------- Stage 2: Production ----------
-  FROM node:20.19.2-slim
+# ---------- Stage 2: Production ----------
+FROM node:23-slim
 
-  WORKDIR /app
+WORKDIR /app
 
-  COPY --from=builder /app/build ./build
-  COPY --from=builder /app/node_modules ./node_modules
-  COPY --from=builder /app/package*.json ./
+# Copy only what’s needed
+COPY --from=builder /app/build ./build
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
 
+ENV NODE_ENV=production
+EXPOSE 5500
 
-  ENV NODE_ENV=production
-  EXPOSE 8016
-
-  CMD ["node", "build/src/index.js"]
+CMD ["node", "build/src/index.js"]
