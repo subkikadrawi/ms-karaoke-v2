@@ -376,6 +376,72 @@ const setNext = async (req: IMainRequest, res: Response) => {
   return BaseResource.exec(res, response);
 };
 
+const setNextPlaying = async (req: IMainRequest, res: Response) => {
+  const user_id = getUserId(req);
+
+  // get rentals tbl
+  const rental = await RentalsTblRepository.findOne({
+    q: {user_id, isBetweenStartAndEndTime: true},
+  });
+
+  if (!rental) {
+    logger.error('Rental not found');
+    return BaseResource.exec(res, {
+      isSuccess: false,
+      message: `${EHttpResponseStatusDesc.NotFound} - Room not found`,
+      status: EHttpResponseStatus.NotFound,
+    });
+  }
+
+  // get playlist tbl
+  const karaokePlaylist = await KaraokePlaylistTblRepository.findOne({
+    q: {rental_id: rental.id, status: EStatusPlaylist.Playing},
+  });
+
+  if (!karaokePlaylist) {
+    //set playing playlist
+    await setPlayingHelper(rental.id ?? 0);
+
+    const karaokePlaylist = await KaraokePlaylistTblRepository.findOne({
+      q: {rental_id: rental.id, status: EStatusPlaylist.Playing},
+    });
+
+    if (!karaokePlaylist) {
+      logger.error('Playlist not found');
+      return BaseResource.exec(res, {
+        isSuccess: false,
+        message: `${EHttpResponseStatusDesc.NotFound} - Playlist not found`,
+        status: EHttpResponseStatus.NotFound,
+      });
+    }
+    const response: IBaseResourceModel = {
+      isSuccess: true,
+      message: 'success update playlist to next',
+      status: EHttpResponseStatus.OK,
+    };
+    logger.info(ELogStage.end);
+    return BaseResource.exec(res, response);
+  }
+
+  //set played playlist
+  await setPlayedHelper(karaokePlaylist.rental_id);
+
+  //set playing playlist
+  await setPlayingHelper(karaokePlaylist.rental_id);
+
+  //reArrange sequence
+  await reArrangeSequenceHelper(karaokePlaylist.rental_id);
+
+  const response: IBaseResourceModel = {
+    isSuccess: true,
+    message: 'success update playlist to next',
+    status: EHttpResponseStatus.OK,
+  };
+
+  logger.info(ELogStage.end);
+  return BaseResource.exec(res, response);
+};
+
 //switch sequence up
 const setSequenceUp = async (req: IMainRequest, res: Response) => {
   const karaokePlaylistId = Number(req.params.playlistId);
@@ -457,6 +523,7 @@ export {
   setPlaying,
   setPlayed,
   setNext,
+  setNextPlaying,
   setSequenceUp,
   setSequenceDown,
   setSequenceTop,

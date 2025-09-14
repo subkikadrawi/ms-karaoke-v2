@@ -9,6 +9,7 @@ router.post('/', authMiddleware, controller.addPlaylist);
 router.post('/set-playing', authMiddleware, controller.setPlaying);
 router.post('/set-played', authMiddleware, controller.setPlayed);
 router.post('/set-next', authMiddleware, controller.setNext);
+router.post('/set-next-playing', authMiddleware, controller.setNextPlaying);
 router.post('/:id', authMiddleware, controller.updatePlaylist);
 router.post('/move-up/:playlistId', authMiddleware, controller.setSequenceUp);
 router.post(
