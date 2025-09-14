@@ -20,8 +20,12 @@ WORKDIR /app
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
+COPY entrypoint.sh ./entrypoint.sh
+
+RUN chmod +x ./entrypoint.sh
 
 ENV NODE_ENV=production
 EXPOSE 5500
 
+ENTRYPOINT ["./entrypoint.sh"]
 CMD ["node", "build/src/index.js"]
