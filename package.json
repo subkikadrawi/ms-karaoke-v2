@@ -9,7 +9,7 @@
     "migrate:rollback": "npx knex migrate:rollback",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "gts lint",
-    "clean": "gts clean",
+    "clean": "rm -rf build",
     "compile": "tsc",
     "fix": "gts fix",
     "prepare": "npm run compile",
@@ -54,7 +54,7 @@
     "moment-timezone": "^0.6.0",
     "multer": "^2.0.2",
     "mysql2": "^3.14.5",
-    "uuid": "^13.0.0"
+    "uuid": "^8.3.2"
   },
   "overrides": {
     "rimraf": "^4.4.1",

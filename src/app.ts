@@ -7,7 +7,7 @@ import loggerMiddleware from './app/https/middleware/LoggerMiddleware';
 import {BaseErrorResource} from './app/https/resources/BaseErrorResource';
 import cors, {CorsOptions} from 'cors';
 import {whitelistCors} from './app/configs/CorsConfig';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 // ✅ set default timezone before using moment()
 moment.tz.setDefault('Asia/Jakarta');
