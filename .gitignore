@@ -2,3 +2,13 @@ node_modules
 secure_media
 build
 .env
+.DS_Store
+.vscode
+.idea
+dist
+coverage
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
